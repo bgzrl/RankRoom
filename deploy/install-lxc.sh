@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script d'installation idempotent de RankRoom pour un LXC Debian 12 minimal
+# Script d'installation idempotent de RankRoom pour LXC Debian 12 / 13 minimal
 # Usage : sudo bash deploy/install-lxc.sh
 
 APP_USER="rankroom"
@@ -18,7 +18,13 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-echo "[1/6] Vérification des dépendances système Debian 12..."
+if [ -r /etc/os-release ]; then
+  # shellcheck disable=SC1091
+  . /etc/os-release
+  echo "Système détecté : ${PRETTY_NAME:-Linux}"
+fi
+
+echo "[1/6] Vérification des dépendances système (Debian 12 / 13)..."
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
 apt-get install -y --no-install-recommends \
@@ -45,10 +51,7 @@ if [ "${NEED_NODE}" -eq 1 ]; then
   apt-get install -y --no-install-recommends nodejs
 fi
 
-if command -v corepack >/dev/null 2>&1; then
-  corepack enable
-  corepack prepare pnpm@latest --activate
-else
+if ! command -v pnpm >/dev/null 2>&1; then
   npm install -g pnpm
 fi
 
