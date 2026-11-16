@@ -1,0 +1,34 @@
+[Unit]
+Description=RankRoom — Notation collaborative & Tier List
+Documentation=https://github.com/rankroom/rankroom
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rankroom
+Group=rankroom
+WorkingDirectory=/opt/rankroom
+EnvironmentFile=/etc/rankroom/rankroom.env
+ExecStart=/usr/bin/node /opt/rankroom/apps/server/dist/index.js
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+
+# Durcissement systemd avec accès écriture explicite sur DATA_DIR pour SQLite WAL (-wal / -shm)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/var/lib/rankroom
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rankroom
+
+[Install]
+WantedBy=multi-user.target

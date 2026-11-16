@@ -1,0 +1,6 @@
+{
+  "name": "RankRoom",
+  "description": "Jeu multijoueur en temps réel de notation collaborative et Tier List.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
